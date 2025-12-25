@@ -4,9 +4,7 @@ from gensim import corpora
 from gensim.models.ldamodel import LdaModel
 
 
-# ======================
-# IO
-# ======================
+
 
 def load_json(path: str):
     with open(path, "r", encoding="utf-8") as f:
@@ -18,9 +16,6 @@ def save_json(obj, file_path):
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
 
-# ======================
-# 构建 corpus & dictionary
-# ======================
 
 def build_corpus(vocab_json: str, doc_freq_json: str):
     """
@@ -55,7 +50,7 @@ def build_corpus(vocab_json: str, doc_freq_json: str):
     dictionary.token2id = {w: i for i, w in id2token.items()}
     dictionary.num_terms = len(id2token)
 
-    # -------- 构建 corpus --------
+ 
     corpus = []
     for doc in docs:
         bow = [(int(wid), int(freq)) for wid, freq in doc.items()]
@@ -64,9 +59,6 @@ def build_corpus(vocab_json: str, doc_freq_json: str):
     return corpus, dictionary
 
 
-# ======================
-# LDA / OLDA 训练
-# ======================
 
 def train_lda(
     corpus,
@@ -80,7 +72,7 @@ def train_lda(
         corpus=corpus,
         id2word=dictionary,
         num_topics=num_topics,
-        passes=passes,          # OLDA / Online 风格
+        passes=passes,         
         iterations=iterations,
         alpha="auto",
         eta="auto",
@@ -91,9 +83,7 @@ def train_lda(
     return lda_model
 
 
-# ======================
-# 输出主题
-# ======================
+
 
 def extract_topics(lda_model, num_topics, top_words=15):
     topics = {}
@@ -124,9 +114,7 @@ def get_document_topics(lda_model, corpus):
     return results
 
 
-# ======================
-# main
-# ======================
+
 
 def main():
     parser = argparse.ArgumentParser(description="LDA / OLDA 训练脚本（gensim）")

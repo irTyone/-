@@ -1,9 +1,13 @@
 *.txt
 !requirements.txt
+!readme.md
+!vocab/stopwords.txt
 *.json
 __pycache__/
 *.log
-*.model
-model/lda.model.expElogbeta.npy
-model/lda.model.id2word
-model/lda.model.state
+!content_info/content.json
+!data/process_1/*.json
+!data/IT-IDF/*.json
+!model/*.json
+!vocab/vocab.json
+!vocab/stop_merge.json

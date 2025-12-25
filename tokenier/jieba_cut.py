@@ -52,15 +52,34 @@ def info_write(code,content_list,info:TinyDB,time) :
     return
     
 
-def cut_process(data_file,df,vocab,exec,info):
-    for _, row in tqdm(df.iterrows(),desc=f"数据表：{data_file}"):
+def cut_process(data_file, df, vocab: TinyDB, exec: Query, info: TinyDB):
+    word_counter = Counter()   # 内存累积词频
+    docs_info = []             # 批量保存文档信息
+
+    for _, row in tqdm(df.iterrows(), desc=f"数据表：{data_file}"):
         content = row['微博正文']
         code = row['微博id']
-        content= URL_PATTERN.sub("",content)
-        content_list=word_cut(content)
-        vocab_create(content_list,vocab,exec)
-        info_write(code,content_list,info,row["发布时间"]) 
-    
+        time = row["发布时间"]
+
+        content = URL_PATTERN.sub("", content)
+        content_list = word_cut(content)
+
+        # 累积词频
+        word_counter.update(content_list)
+
+        # 保存文档信息
+        docs_info.append({'id': code, 'words': dict(Counter(content_list)), 'time': time})
+
+    # 批量写入文档信息
+    info.insert_multiple(docs_info)
+
+    # 批量更新词表
+    for word, freq in word_counter.items():
+        res = vocab.get(exec.word == word)
+        if res:
+            vocab.update({'freq': res['freq'] + freq}, exec.word == word)
+        else:
+            vocab.insert({'word': word, 'freq': freq, 'lang': 'ch'})
 
 stops=set(load_stopwords())
 
