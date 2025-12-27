@@ -26,7 +26,6 @@ def build_corpus(vocab_json: str, doc_freq_json: str):
     vocab_raw = load_json(vocab_json)
     docs = load_json(doc_freq_json)
 
-    # -------- 校验 vocab --------
     if isinstance(vocab_raw, list):
         raise TypeError(
             f"[ERROR] 你把 freq 文件当成 vocab 传进来了: {vocab_json}"
@@ -36,13 +35,12 @@ def build_corpus(vocab_json: str, doc_freq_json: str):
             f"[ERROR] vocab_tfidf.json 必须是 dict {{id: word}}"
         )
 
-    # -------- 校验 docs --------
+
     if not isinstance(docs, list):
         raise TypeError(
             f"[ERROR] freq_tfidf.json 必须是 list[dict]"
         )
 
-    # -------- 构建 dictionary --------
     id2token = {int(i): w for i, w in vocab_raw.items()}
 
     dictionary = corpora.Dictionary()

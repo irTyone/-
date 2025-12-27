@@ -107,11 +107,11 @@ def main():
     vocab_out = f"{args.out_dir}/vocab.json"
     freq_out = f"{args.out_dir}/freq.json"
 
-    # 1. 加载停用词
+  
     stopwords = load_stopwords(args.stopwords)
     print(f"[INFO] 加载停用词 {len(stopwords)} 个")
 
-    # 2. 处理词表
+ 
     vocab = vocab_2_json(
         args.vocab_tinydb,
         vocab_out,
